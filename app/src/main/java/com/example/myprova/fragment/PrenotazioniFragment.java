@@ -56,7 +56,7 @@ public class PrenotazioniFragment extends Fragment {
         params.put("action", "INIT");
         params.put("username", Connection.username);
         params.put("role", Connection.isAdmin);
-        //params.put("caseMobile", "mobile");
+        params.put("caseMobile", "mobile");
 
 
         client.post(Connection.URL + "PrenotazioniServlet", params, new JsonHttpResponseHandler() {
@@ -65,32 +65,42 @@ public class PrenotazioniFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
-                    JSONArray goPren = response.getJSONArray(0);
-                    JSONArray goSvol = response.getJSONArray(1);
-                    JSONArray goDisd = response.getJSONArray(2);
-                    final ArrayList<Ripetizioni> prenAtt = new ArrayList<>();
-                    final ArrayList<Ripetizioni> prenEff = new ArrayList<>();
-                    final ArrayList<Ripetizioni> prenDis = new ArrayList<>();
+
+                    final ArrayList<Ripetizioni> pAttive = new ArrayList<>();
+                    final ArrayList<Ripetizioni> pSvolte= new ArrayList<>();
+                    final ArrayList<Ripetizioni> pDisdette = new ArrayList<>();
+
+                    final JSONArray goPrenApp = response.getJSONArray(0);
+                    System.out.println(response.getJSONArray(0));
+
+                    final JSONArray goSvolApp = response.getJSONArray(1);
+                    System.out.println(response.getJSONArray(1));
+
+                    final JSONArray goDisdApp = response.getJSONArray(2);
+                    System.out.println(response.getJSONArray(2));
+
+
                     final ArrayList<String> titleListAtt = new ArrayList<>();
                     final ArrayList<String> titleListEff = new ArrayList<>();
                     final ArrayList<String> titleListDis = new ArrayList<>();
 
+
                     String days[]={"Lunedì","Martedì","Mercoledì","giovedì", "Venerdì"};
                     String hours[]={"14:00","15:00","16:00","17:00"};
 
-                    for(int i=0;i<goPren.length();i++){
-                        JSONObject json= goPren.getJSONObject(i);
-                        prenAtt.add(new Ripetizioni((int)json.get("id_rip"),json.get("stato").toString(),json.get("giorno").toString(),(int)json.get("ora_i"),(int)json.get("ora_f"),(int)json.get("id_corso"),(int)json.get("id_docente"),json.get("username").toString()));
+                   for(int i=0;i<goPrenApp.length();i++){
+                        JSONObject json= goPrenApp.getJSONObject(i);
+                        pAttive.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
                         titleListAtt.add((int)json.get("id_corso") + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")]  );
                     }
-                    for(int i=0;i<goSvol.length();i++){
-                        JSONObject json= goSvol.getJSONObject(i);
-                       prenEff.add(new Ripetizioni((int)json.get("id_rip"),json.get("stato").toString(),json.get("giorno").toString(),(int)json.get("ora_i"),(int)json.get("ora_f"),(int)json.get("id_corso"),(int)json.get("id_docente"),json.get("username").toString()));
+                   for(int i=0;i<goSvolApp.length();i++){
+                        JSONObject json= goSvolApp.getJSONObject(i);
+                       pSvolte.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
                         titleListEff.add((int)json.get("id_corso") + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")]  );
                     }
-                    for(int i=0;i<goDisd.length();i++){
-                        JSONObject json= goDisd.getJSONObject(i);
-                       prenDis.add(new Ripetizioni((int)json.get("id_rip"),json.get("stato").toString(),json.get("giorno").toString(),(int)json.get("ora_i"),(int)json.get("ora_f"),(int)json.get("id_corso"),(int)json.get("id_docente"),json.get("username").toString()));
+                    for(int i=0;i<goDisdApp.length();i++){
+                        JSONObject json= goDisdApp.getJSONObject(i);
+                       pDisdette.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
                         titleListDis.add((int)json.get("id_corso") + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")]  );
                     }
 
@@ -114,7 +124,7 @@ public class PrenotazioniFragment extends Fragment {
                                     android.R.layout.simple_list_item_1, titleListAtt);
                             TextView tv = (TextView)getView().findViewById(R.id.txt_empty);
 
-                            if(prenAtt.size() == 0){
+                            if(pAttive.size() == 0){
                                 //Lista vuota
                                 tv.setText("Non ci sono ancora prenotazioni attive!");
                             }else{
@@ -127,11 +137,11 @@ public class PrenotazioniFragment extends Fragment {
                                     listaCorrente = (ListView) getView().findViewById(R.id.activeListView);
                                     adapter  = new ArrayAdapter<String> (getContext().getApplicationContext(),
                                             android.R.layout.simple_list_item_1, titleListAtt);
-                                    prenSel = prenAtt;
+                                    prenSel = pAttive;
                                     option = true;
                                     //idPren = position;
                                     // sp.setBackgroundColor(Color.GREEN);
-                                    if(prenAtt.size() == 0){
+                                    if(pAttive.size() == 0){
                                         //Lista vuota
                                         tv.setText("Non ci sono ancora prenotazioni attive!");
                                     }else{
@@ -142,9 +152,9 @@ public class PrenotazioniFragment extends Fragment {
                                 case 1:
                                     listaCorrente = (ListView) getView().findViewById(R.id.activeListView);
                                     adapter  = new ArrayAdapter<String> (getContext().getApplicationContext(),android.R.layout.simple_list_item_1, titleListEff);
-                                    prenSel = prenEff;
+                                    prenSel = pSvolte;
                                     option = false;
-                                    if(prenEff.size() == 0){
+                                    if(pSvolte.size() == 0){
                                         //Lista vuota
                                         tv.setText("Non ci sono ancora prenotazioni effettuate!");
                                     }else{
@@ -156,9 +166,9 @@ public class PrenotazioniFragment extends Fragment {
                                 case 2:
                                     listaCorrente = (ListView) getView().findViewById(R.id.activeListView);
                                     adapter  = new ArrayAdapter<String> (getContext().getApplicationContext(),android.R.layout.simple_list_item_1, titleListDis);
-                                    prenSel = prenDis;
+                                    prenSel = pDisdette;
                                     option = false;
-                                    if(prenDis.size() == 0){
+                                    if(pDisdette.size() == 0){
                                         //Lista vuota
                                         tv.setText("Non ci sono ancora prenotazioni disdette!");
                                     }else{
@@ -179,7 +189,7 @@ public class PrenotazioniFragment extends Fragment {
                                     builder.setTitle(prenSel.get(pos).getId_corso());
                                     builder.setMessage("Docente: " + prenSel.get(pos).getId_docente());
                                     if(option){
-                                        idPren = prenSel.get(pos).getId_rip();
+                                       //idPren = prenSel.get(pos).getStato()
                                         builder.setPositiveButton("Effettua", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                                 cambiaStato("effettuata", idPren);

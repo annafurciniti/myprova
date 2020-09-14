@@ -136,10 +136,9 @@ public class PrenotaFragment extends Fragment {
             params.put("id_docente", Connection.docente);
             params.put("corso", Connection.corso);
            // params.put("case", "android");
-            params.put("giorno", Integer.parseInt(Connection.slot)/10);
-            params.put("ora", Integer.parseInt(Connection.slot)%10);
-            System.out.println(Integer.parseInt(Connection.slot)/10);
-            System.out.println(Integer.parseInt(Connection.slot)%10);
+            params.put("giorno", Connection.days);
+            params.put("ora",Connection.hours) ;
+
             client.post(Connection.URL + "PrenotaServlet", params, new JsonHttpResponseHandler() {
                 @SuppressLint("ShowToast")
                 @Override
@@ -147,9 +146,9 @@ public class PrenotaFragment extends Fragment {
                     super.onSuccess(statusCode, headers, response);
 
                     try {
-                        boolean rets = false;
-                        rets = response.getBoolean(0);
-                        if(rets){
+                        boolean res = false;
+                        res = response.getBoolean(0);
+                        if(res){
                             Toast.makeText(getContext(), "Prenotazione registrata con successo!", Toast.LENGTH_SHORT).show();
                             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PrenotazioniFragment()).commit();
                             ((NavigationView)getActivity().findViewById(R.id.nav_view)).setCheckedItem(R.id.nav_prenotazioni);

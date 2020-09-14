@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
         RequestParams params = new RequestParams();
 
         params.put("action", "INIT");
-        params.put("case", "android");
+        //params.put("case", "android");
 
         final HomeFragment self = this;
 
@@ -61,10 +61,14 @@ public class HomeFragment extends Fragment {
                 super.onSuccess(statusCode, headers, response);
                 try {
                     String result="";
-                     final ArrayList<String> titolo = new ArrayList<>();
+                    final ArrayList<String> titolo = new ArrayList<>();
                     final ArrayList<String> descrizione = new ArrayList<>();
-                    for (int i = 0; i < response.length(); i++) {
-                        JSONObject e = response.getJSONObject(i);
+
+                    final JSONArray corsi = response.getJSONArray(0);
+                    System.out.println(response.getJSONArray(0));
+
+                    for (int i = 0; i < corsi.length(); i++) {
+                        JSONObject e = corsi.getJSONObject(i);
                         titolo.add(e.getString("titolo"));
                        descrizione.add(e.getString("descrizione"));
                     }

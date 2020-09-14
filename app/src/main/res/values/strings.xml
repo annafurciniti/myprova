@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">myprova</string>
+    <string name="urlanna">http://192.168.1.9:8080/TWEBIUM/</string>
+    <string name="open" />
+    <string name="close" />
+    <string name="tab_text_1">corsi</string>
+    <string name="tab_text_2">docenti</string>
+    <string name="tab_text_3">orari</string>
+
+</resources>

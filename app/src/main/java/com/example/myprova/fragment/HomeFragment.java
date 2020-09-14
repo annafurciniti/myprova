@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class HomeFragment extends Fragment {
                        descrizione.add(e.getString("descrizione"));
                     }
                     ListView listView = getView().findViewById(R.id.listCorsi);
-                    MyAdapter adp = new MyAdapter(getContext(), titolo);
+                    MyAdapter adp = new MyAdapter(getContext(), titolo,descrizione);
                     listView.setAdapter(adp);
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -76,18 +77,25 @@ public class HomeFragment extends Fragment {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setCancelable(true);
-                            builder.setTitle(titolo.get(position));
-                            builder.setMessage(descrizione.get(position));
+                     /*       builder.setTitle(titolo.get(position));
+                            builder.setTitle(descrizione.get(position));
                             builder.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
 
-                            });
+                            });*/
                             if(Connection.username != null){
                                 builder.setPositiveButton("Vedi corso", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         getFragmentManager().beginTransaction().replace(R.id.fragment_container, new PrenotazioniFragment()).commit();
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }else{
+                                builder.setPositiveButton("Vedi corso", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoginFragment()).commit();
                                         dialog.dismiss();
                                     }
                                 });
@@ -111,12 +119,13 @@ public class HomeFragment extends Fragment {
 
     class MyAdapter extends ArrayAdapter<String> {
         ArrayList<String> mainTitles;
+        ArrayList<String> subTitles;
 
 
-        public MyAdapter(Context context, ArrayList<String> mainTitles) {
+        public MyAdapter(Context context, ArrayList<String> mainTitles, ArrayList<String> subTitles) {
             super(context, R.layout.row, R.id.txtMainTitle, mainTitles);
             this.mainTitles = mainTitles;
-
+            this.subTitles = subTitles;
         }
 
         @SuppressLint("Range")
@@ -127,11 +136,13 @@ public class HomeFragment extends Fragment {
             View row = layoutInflater.inflate(R.layout.row, parent, false);
 
             TextView main = row.findViewById(R.id.txtMainTitle);
-            //TextView sub = row.findViewById(R.id.txtSubTitle);
+            main.setGravity(Gravity.CENTER_HORIZONTAL);
+            TextView sub = row.findViewById(R.id.txtSubTitle);
+
 
             main.setText(mainTitles.get(position));
-           // sub.setText(subTitles.get(position));
-            main.setTextColor(Color.parseColor("#6200EE"));
+            sub.setText(subTitles.get(position));
+
 
             return row;
         }

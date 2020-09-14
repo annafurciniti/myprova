@@ -123,6 +123,11 @@ public class PrenotaFragment extends Fragment {
         return view1;
     }
 
+    public void mioinit(){
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+    }
+
     public void prenota(){
             AsyncHttpClient client = new AsyncHttpClient();
             RequestParams params = new RequestParams();

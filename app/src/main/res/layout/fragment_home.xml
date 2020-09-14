@@ -23,7 +23,6 @@
             android:textStyle="bold" />
 
                   <ListView
-
           android:textAlignment="center"
           android:id="@+id/listCorsi"
           android:layout_width="match_parent"

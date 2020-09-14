@@ -13,12 +13,12 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_marginBottom="30dp"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
             android:contextClickable="false"
-            android:src="@drawable/icon_login"/>
+            android:src="@drawable/icon_login" />
 
         <TextView
             android:id="@+id/textView"

@@ -123,19 +123,15 @@ public class PrenotaFragment extends Fragment {
         return view1;
     }
 
-    public void mioinit(){
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-    }
 
     public void prenota(){
             AsyncHttpClient client = new AsyncHttpClient();
             RequestParams params = new RequestParams();
             params.put("action", "PRENOTA");
-          //params.put("username", Connection.username);
+            params.put("username", Connection.usernameApp);
             params.put("id_docente", Connection.docente);
             params.put("corso", Connection.corso);
-           // params.put("case", "android");
+            params.put("case", "android");
             params.put("giorno", Connection.days);
             params.put("ora",Connection.hours) ;
 
@@ -146,7 +142,7 @@ public class PrenotaFragment extends Fragment {
                     super.onSuccess(statusCode, headers, response);
 
                     try {
-                        boolean res = false;
+                        boolean res = true;
                         res = response.getBoolean(0);
                         if(res){
                             Toast.makeText(getContext(), "Prenotazione registrata con successo!", Toast.LENGTH_SHORT).show();

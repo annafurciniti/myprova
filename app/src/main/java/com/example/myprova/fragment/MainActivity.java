@@ -141,73 +141,73 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final TextView viewControl = (TextView) findViewById(R.id.txtWarning);
         if (username.equals("") || password.equals("")) {
             viewControl.setText("Attenzione, campo mancante");
-            }else{
-                AsyncHttpClient client = new AsyncHttpClient();
-                RequestParams params = new RequestParams();
-                params.put("action", "login");
-                params.put("username", username);
-                params.put("password", password);
-                params.put("role",isAdmin);
+        }else{
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+            params.put("action", "login");
+            params.put("username", username);
+            params.put("password", password);
+            params.put("role",isAdmin);
 
-                client.post(Connection.URL + "LoginServlet", params, new JsonHttpResponseHandler() {
-                    @SuppressLint("ShowToast")
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        super.onSuccess(statusCode, headers, response);
+            client.post(Connection.URL + "LoginServlet", params, new JsonHttpResponseHandler() {
+                @SuppressLint("ShowToast")
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
 
-                        try {
-                            ArrayList<String> rets = new ArrayList<>();
-                            for (int i = 0; i < response.length(); i++) {
-                                rets.add(response.getString(i));
-                                Log.d("ret" + i, rets.get(i));
-                            }
-
-                            if (!rets.get(0).equals("error")) {
-                                TextView txtUsername = (TextView) findViewById(R.id.txt_username);
-                                TextView txtRuolo =(TextView) findViewById(R.id.txt_ruolo);
-                                txtUsername.setText(rets.get(0));
-                                Connection.username = rets.get(0);
-
-                                //0 studente, 1 admin
-                                if(rets.get(1).equals("0")) {
-                                    Connection.isAdmin = 0;
-                                    txtRuolo.setText("Studente");
-
-                                }else {
-                                    Connection.isAdmin = 1;
-                                    txtRuolo.setText("Amministratore");
-
-                                }
-
-                                //modifico la nav laterale
-                                logged = true;
-                                invalidateOptionsMenu();
-                                //changeNav(true);
-
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-                                navigationView.setCheckedItem(R.id.nav_home);
-                                Toast.makeText(getApplicationContext(), " Bentornato " + rets.get(0) + " !", Toast.LENGTH_SHORT).show();
-                            } else {
-                                viewControl.setText("Username o password errati");
-                                Toast.makeText(getApplicationContext(), "Username o password errati", Toast.LENGTH_SHORT).show();
-                            }
-                            //rets.get(0): username
-                            //rets.get(1): ruolo
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    try {
+                        ArrayList<String> rets = new ArrayList<>();
+                        for (int i = 0; i < response.length(); i++) {
+                            rets.add(response.getString(i));
+                            Log.d("ret" + i, rets.get(i));
                         }
-                    }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.d("failure",""+ statusCode+""+ errorResponse);
+                        if (!rets.get(0).equals("error")) {
+                            TextView txtUsername = (TextView) findViewById(R.id.txt_username);
+                            TextView txtRuolo =(TextView) findViewById(R.id.txt_ruolo);
+                            txtUsername.setText(rets.get(0));
+                            Connection.username = rets.get(0);
+                            System.out.println(rets.get(0));
+                            //0 studente, 1 admin
+                            if(rets.get(1).equals("0")) {
+                                Connection.isAdmin = 0;
+                                txtRuolo.setText("Studente");
+
+                            }else {
+                                Connection.isAdmin = 1;
+                                txtRuolo.setText("Amministratore");
+
+                            }
+
+                            //modifico la nav laterale
+                            logged = true;
+                            invalidateOptionsMenu();
+                            //changeNav(true);
+
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+                            navigationView.setCheckedItem(R.id.nav_home);
+                            Toast.makeText(getApplicationContext(), " Bentornato " + rets.get(0) + " !", Toast.LENGTH_SHORT).show();
+                        } else {
+                            viewControl.setText("Username o password errati");
+                            Toast.makeText(getApplicationContext(), "Username o password errati", Toast.LENGTH_SHORT).show();
+                        }
+                        //rets.get(0): username
+                        //rets.get(1): ruolo
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
-            }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    Log.d("failure",""+ statusCode+""+ errorResponse);
+                }
+            });
         }
+    }
 
 
     public void Signin(final View view) throws IOException {
@@ -216,68 +216,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final TextView viewControl = (TextView) findViewById(R.id.txtWarningSignin);
         if (username.equals("") || password.equals("")) {
             viewControl.setText("Attenzione, campo mancante");
-            }else{
-                AsyncHttpClient client = new AsyncHttpClient();
-                RequestParams params = new RequestParams();
-                params.put("action", "sing");
-                params.put("username", username);
-                params.put("password", password);
-                params.put("role",isAdmin);
+        }else{
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+            params.put("action", "sing");
+            params.put("username", username);
+            params.put("password", password);
+            params.put("role",isAdmin);
 
-                client.post(Connection.URL + "LoginServlet", params, new JsonHttpResponseHandler() {
-                    @SuppressLint({"ShowToast", "SetTextI18n"})
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        super.onSuccess(statusCode, headers, response);
+            client.post(Connection.URL + "LoginServlet", params, new JsonHttpResponseHandler() {
+                @SuppressLint({"ShowToast", "SetTextI18n"})
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
 
-                        try {
-                            ArrayList<String> rets = new ArrayList<>();
-                            for (int i = 0; i < response.length(); i++) {
-                                rets.add(response.getString(i));
-                                Log.d("ret" + i, rets.get(i));
-                            }
+                    try {
+                        ArrayList<String> rets = new ArrayList<>();
+                        for (int i = 0; i < response.length(); i++) {
+                            rets.add(response.getString(i));
+                            Log.d("ret" + i, rets.get(i));
+                        }
 
-                            if(rets.get(0).equals("esistente")){
-                                viewControl.setText("Username già esistente");
-                            }else if (rets.get(0).equals("error")){
-                                viewControl.setText("Username o password errati");
-                            }else{
-                                TextView txtUsername = findViewById(R.id.txt_username);
-                                TextView txtRuolo = findViewById(R.id.txt_ruolo);
-                                txtUsername.setText(rets.get(0));
-                                //0 studente, 1 admin
+                        if(rets.get(0).equals("esistente")){
+                            viewControl.setText("Username già esistente");
+                        }else if (rets.get(0).equals("error")){
+                            viewControl.setText("Username o password errati");
+                        }else{
+                            TextView txtUsername = findViewById(R.id.txt_username);
+                            TextView txtRuolo = findViewById(R.id.txt_ruolo);
+                            txtUsername.setText(rets.get(0));
+                            //0 studente, 1 admin
                             /*    if(rets.get(1).equals("0")) {
                                     txtRuolo.setText("User");
                                 }else {
                                     txtRuolo.setText("Admin");
                                 }*/
 
-                                //modifico la nav laterale
-                                logged = true;
-                                invalidateOptionsMenu();
-                                //changeNav(true);
+                            //modifico la nav laterale
+                            logged = true;
+                            invalidateOptionsMenu();
+                            //changeNav(true);
 
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-                                navigationView.setCheckedItem(R.id.nav_home);
-                                Toast.makeText(getApplicationContext(), "Benvenuto " + rets.get(0) + "! ", Toast.LENGTH_SHORT).show();
-                            }
-                            //rets.get(0): username
-                            //rets.get(1): ruolo
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+                            navigationView.setCheckedItem(R.id.nav_home);
+                            Toast.makeText(getApplicationContext(), "Benvenuto " + rets.get(0) + "! ", Toast.LENGTH_SHORT).show();
                         }
-                    }
+                        //rets.get(0): username
+                        //rets.get(1): ruolo
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                       super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.d("failure",""+ statusCode+""+ errorResponse);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
-            }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse);
+                    Log.d("failure",""+ statusCode+""+ errorResponse);
+                }
+            });
         }
+    }
 
 
 

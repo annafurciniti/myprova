@@ -36,11 +36,13 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.example.myprova.fragment.Connection.corso;
+
 public class PrenotazioniFragment extends Fragment {
     private ArrayAdapter<String> spinnerAdapter;
     ArrayList<Ripetizioni> prenSel = new ArrayList<>();
     boolean option = false;
-    int idPren;
+    String stato1;
 
     @Nullable
     @Override
@@ -54,7 +56,7 @@ public class PrenotazioniFragment extends Fragment {
         RequestParams params = new RequestParams();
 
         params.put("action", "INIT");
-        params.put("username", Connection.username);
+        params.put("username", Connection.usernameApp);
         params.put("role", Connection.isAdmin);
         params.put("caseMobile", "mobile");
 
@@ -66,17 +68,17 @@ public class PrenotazioniFragment extends Fragment {
                 super.onSuccess(statusCode, headers, response);
                 try {
 
-                    final ArrayList<Ripetizioni> pAttive = new ArrayList<>();
-                    final ArrayList<Ripetizioni> pSvolte= new ArrayList<>();
-                    final ArrayList<Ripetizioni> pDisdette = new ArrayList<>();
+                    final ArrayList<Ripetizioni> pAtt = new ArrayList<>();
+                    final ArrayList<Ripetizioni> pSvol= new ArrayList<>();
+                    final ArrayList<Ripetizioni> pDisd = new ArrayList<>();
 
-                    final JSONArray goPrenApp = response.getJSONArray(0);
+                    JSONArray goPrenApp= response.getJSONArray(0);
                     System.out.println(response.getJSONArray(0));
 
-                    final JSONArray goSvolApp = response.getJSONArray(1);
+                    JSONArray goSvolApp = response.getJSONArray(1);
                     System.out.println(response.getJSONArray(1));
 
-                    final JSONArray goDisdApp = response.getJSONArray(2);
+                    JSONArray goDisdApp = response.getJSONArray(2);
                     System.out.println(response.getJSONArray(2));
 
 
@@ -88,20 +90,20 @@ public class PrenotazioniFragment extends Fragment {
                     String days[]={"Lunedì","Martedì","Mercoledì","giovedì", "Venerdì"};
                     String hours[]={"14:00","15:00","16:00","17:00"};
 
-                   for(int i=0;i<goPrenApp.length();i++){
+                  for(int i=0;i<goPrenApp.length();i++){
                         JSONObject json= goPrenApp.getJSONObject(i);
-                        pAttive.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
-                        titleListAtt.add((int)json.get("id_corso") + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")]  );
+                        pAtt.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
+                        titleListAtt.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")] );
                     }
                    for(int i=0;i<goSvolApp.length();i++){
                         JSONObject json= goSvolApp.getJSONObject(i);
-                       pSvolte.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
-                        titleListEff.add((int)json.get("id_corso") + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")]  );
+                       pSvol.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
+                        titleListEff.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")] );
                     }
                     for(int i=0;i<goDisdApp.length();i++){
                         JSONObject json= goDisdApp.getJSONObject(i);
-                       pDisdette.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
-                        titleListDis.add((int)json.get("id_corso") + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")]  );
+                       pDisd.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
+                        titleListDis.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")]  );
                     }
 
 
@@ -124,7 +126,7 @@ public class PrenotazioniFragment extends Fragment {
                                     android.R.layout.simple_list_item_1, titleListAtt);
                             TextView tv = (TextView)getView().findViewById(R.id.txt_empty);
 
-                            if(pAttive.size() == 0){
+                            if(pAtt.size() == 0){
                                 //Lista vuota
                                 tv.setText("Non ci sono ancora prenotazioni attive!");
                             }else{
@@ -137,11 +139,11 @@ public class PrenotazioniFragment extends Fragment {
                                     listaCorrente = (ListView) getView().findViewById(R.id.activeListView);
                                     adapter  = new ArrayAdapter<String> (getContext().getApplicationContext(),
                                             android.R.layout.simple_list_item_1, titleListAtt);
-                                    prenSel = pAttive;
+                                    prenSel = pAtt;
                                     option = true;
                                     //idPren = position;
                                     // sp.setBackgroundColor(Color.GREEN);
-                                    if(pAttive.size() == 0){
+                                    if(pAtt.size() == 0){
                                         //Lista vuota
                                         tv.setText("Non ci sono ancora prenotazioni attive!");
                                     }else{
@@ -152,9 +154,9 @@ public class PrenotazioniFragment extends Fragment {
                                 case 1:
                                     listaCorrente = (ListView) getView().findViewById(R.id.activeListView);
                                     adapter  = new ArrayAdapter<String> (getContext().getApplicationContext(),android.R.layout.simple_list_item_1, titleListEff);
-                                    prenSel = pSvolte;
+                                    prenSel = pSvol;
                                     option = false;
-                                    if(pSvolte.size() == 0){
+                                    if(pSvol.size() == 0){
                                         //Lista vuota
                                         tv.setText("Non ci sono ancora prenotazioni effettuate!");
                                     }else{
@@ -166,9 +168,9 @@ public class PrenotazioniFragment extends Fragment {
                                 case 2:
                                     listaCorrente = (ListView) getView().findViewById(R.id.activeListView);
                                     adapter  = new ArrayAdapter<String> (getContext().getApplicationContext(),android.R.layout.simple_list_item_1, titleListDis);
-                                    prenSel = pDisdette;
+                                    prenSel = pDisd;
                                     option = false;
-                                    if(pDisdette.size() == 0){
+                                    if(pDisd.size() == 0){
                                         //Lista vuota
                                         tv.setText("Non ci sono ancora prenotazioni disdette!");
                                     }else{
@@ -189,16 +191,16 @@ public class PrenotazioniFragment extends Fragment {
                                     builder.setTitle(prenSel.get(pos).getId_corso());
                                     builder.setMessage("Docente: " + prenSel.get(pos).getId_docente());
                                     if(option){
-                                       //idPren = prenSel.get(pos).getStato()
+                                       stato1 = prenSel.get(pos).getStato();
                                         builder.setPositiveButton("Effettua", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                cambiaStato("effettuata", idPren);
+                                                cambiaStato("effettuata", stato1);
                                                 dialog.dismiss();
                                             }
                                         });
                                         builder.setNegativeButton("Disdici", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                cambiaStato("disdetta", idPren);
+                                                cambiaStato("disdetta", stato1);
                                                 dialog.dismiss();
                                             }
 
@@ -224,11 +226,12 @@ public class PrenotazioniFragment extends Fragment {
             }
         });
     }
-    public void cambiaStato(final String stato,  int idPrenotazione){
+    public void cambiaStato(final String stato, String stato1){
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("action", "STATO");
         params.put("docente", Connection.docente);
+        params.put("usernameApp",Connection.usernameApp);
         params.put("ora", Connection.hours);
         params.put("giorno", Connection.days);
         params.put("stato", stato);

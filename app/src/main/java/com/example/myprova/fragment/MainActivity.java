@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             //modifico la nav laterale
                             logged = true;
                             invalidateOptionsMenu();
-                            //changeNav(true);
+                            //changeNav(true);rrtrtedyyfjchvjhjfg
 
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
                             navigationView.setCheckedItem(R.id.nav_home);

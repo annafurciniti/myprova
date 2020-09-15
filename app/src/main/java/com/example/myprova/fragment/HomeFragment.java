@@ -1,5 +1,5 @@
 package com.example.myprova.fragment;
-
+//quando funioni
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
         this.makeListCorsi();
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
-
 
     private void makeListCorsi(){
         AsyncHttpClient client = new AsyncHttpClient();

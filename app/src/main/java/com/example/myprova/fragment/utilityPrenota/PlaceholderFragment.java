@@ -59,11 +59,13 @@ public class  PlaceholderFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
-        int index = 1;
+       int index = 1;
+        System.out.println(index);
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
         pageViewModel.setIndex(index);
+        System.out.println(index);
     }
 
     @SuppressLint("FragmentLiveDataObserve")
@@ -86,7 +88,7 @@ public class  PlaceholderFragment extends Fragment {
                 break;
             case 2:
                 System.out.println("docenti1");
-                textView.setText("cazzo");
+               textView.setText("O MERDA");
                 break;
             case 3:
                 System.out.println("orari1");
@@ -110,20 +112,22 @@ public class  PlaceholderFragment extends Fragment {
 
         final PlaceholderFragment self = this;
 
-        client.post(Connection.URL + "HomeServlet", params, new JsonHttpResponseHandler() {
+        client.post(Connection.URL + "PrenotaServlet", params, new JsonHttpResponseHandler() {
             @SuppressLint("ShowToast")
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
                     final ArrayList<String> titolo= new ArrayList<>();
-                    final ArrayList<String> descrizione= new ArrayList<>();
-                    for (int i = 0; i < response.length(); i++) {
-                        JSONObject e = response.getJSONObject(i);
+                    final JSONArray corsi = response.getJSONArray(0);
+                    System.out.println(response.getJSONArray(0));
+
+                    for (int i = 0; i < corsi.length(); i++) {
+                        JSONObject e = corsi.getJSONObject(i);
                         titolo.add(e.getString("titolo"));
                     }
                     ListView listView = view2.findViewById(R.id.listEntita);
-                    MyAdapter adp = new MyAdapter(getContext(),titolo, descrizione, 0);
+                    MyAdapter adp = new MyAdapter(getContext(),titolo,  0);
                     listView.setAdapter(adp);
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -134,7 +138,8 @@ public class  PlaceholderFragment extends Fragment {
                             Toast.makeText(getContext(), ((TextView)view.findViewById(R.id.txtMainTitle)).getText(), Toast.LENGTH_SHORT).show();
                             Connection.corso = (String)((TextView)view.findViewById(R.id.txtMainTitle)).getText();
                             Connection.docente = null;
-                            Connection.slot = null;
+                            Connection.hours = null;
+                            Connection.days = null;
                             ((ListView)SectionsPagerAdapter.fragments[2].getListEntita()).setAdapter(null);
                             SectionsPagerAdapter.fragments[1].makeListDocenti((String) ((TextView)view.findViewById(R.id.txtMainTitle)).getText());
                             ((TabLayout) getParentFragment().getView().findViewById(R.id.tabs)).getTabAt(1).select();
@@ -153,13 +158,13 @@ public class  PlaceholderFragment extends Fragment {
         });
     }
 
-    private void makeListDocenti(String idCorso){
+    private void makeListDocenti(String corso){
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         final View view2 = root;
-        System.out.println(idCorso);
+        System.out.println(corso);
         params.put("action", "DOC");
-        params.put("idCorso", idCorso);
+        params.put("corso", corso);
         params.put("case", "android");
         final PlaceholderFragment self = this;
         System.out.println("cia1");
@@ -171,19 +176,30 @@ public class  PlaceholderFragment extends Fragment {
                 System.out.println("cia2");
                 try {
                     System.out.println("cia3");
-                    final ArrayList<String> id_docente = new ArrayList<>();
-                    ArrayList<String> nome = new ArrayList<>();
-                    if(response.length() == 0)
+
+                    final ArrayList<String> nome = new ArrayList<>();
+                   // ArrayList<String> nome = new ArrayList<>();
+
+                  final JSONArray docenti = response.getJSONArray(0);
+                    System.out.println(response.getJSONArray(0));
+
+                        for (int i = 0; i < docenti.length(); i++) {
+                            JSONObject e = docenti.getJSONObject(i);
+                            nome.add(e.getString("nome"));
+                            // nome.add(e.getString("nome"));
+                        }
+
+
+
+
+
+                    if(docenti.length() == 0)
                         ((TextView)root.findViewById(R.id.section_label)).setText("NESSUN DOCENTE ASSEGNATO AL CORSO!");
                     else
                         ((TextView)root.findViewById(R.id.section_label)).setText("SCEGLIERE UNO DEI DOCENTI DISPONIBILI:");
-                    for (int i = 0; i < response.length(); i++) {
-                        JSONObject e = response.getJSONObject(i);
-                        id_docente.add(e.getString("idDocente"));
-                        nome.add(e.getString("nome"));
-                    }
+
                     ListView listView = view2.findViewById(R.id.listEntita);
-                    MyAdapter adp = new MyAdapter(getContext(), nome, id_docente, 1);
+                    MyAdapter adp = new MyAdapter(getContext(), nome, 1);
                     listView.setAdapter(adp);
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -192,11 +208,12 @@ public class  PlaceholderFragment extends Fragment {
                             //FragmentTransaction ft = getFragmentManager().beginTransaction();
                             //ft.replace(R.id.fragment_container, new LoginFragment()).commit();
                             Toast.makeText(getContext(), "onClick()", Toast.LENGTH_SHORT).show();
-                            Connection.nomeDoc = (String)((TextView)view.findViewById(R.id.txtMainTitle)).getText();
+                            Connection.docente = (String)((TextView)view.findViewById(R.id.txtMainTitle)).getText();
                           //  Connection.docente = ((String)((TextView)view.findViewById(R.id.txtSubTitle)).getText()).split(": ")[1];
                             ((ListView)SectionsPagerAdapter.fragments[2].getListEntita()).clearChoices();
-                            Connection.slot = null;
-                            //SectionsPagerAdapter.fragments[2].makeListOrari(((String) ((TextView)view.findViewById(R.id.txtSubTitle)).getText()).split(": ")[1]);
+                            Connection.days = null;
+                            Connection.hours = null;
+                            SectionsPagerAdapter.fragments[2].makeListOrari(((String) ((TextView)view.findViewById(R.id.txtSubTitle)).getText()).split(": ")[1]);
                             ((TabLayout) getParentFragment().getView().findViewById(R.id.tabs)).getTabAt(2).select();
                         }
                     });
@@ -244,8 +261,8 @@ public class  PlaceholderFragment extends Fragment {
                         ora_i.add(Connection.hours[Integer.parseInt(e.getString("ora"))]);
                     }
                     ListView listView = view2.findViewById(R.id.listEntita);
-                    MyAdapter adp = new MyAdapter(getContext(), giorno, ora_i, 2);
-                    listView.setAdapter(adp);
+                    //MyAdapter adp = new MyAdapter(getContext(), giorno, ora_i, 2);
+                   // listView.setAdapter(adp);
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -310,7 +327,7 @@ public class  PlaceholderFragment extends Fragment {
         ArrayList<String> mainTitles;
        // ArrayList<String> subTitles;
         private int index= -1;
-        public MyAdapter(Context context, ArrayList<String> mainTitles, ArrayList<String> subTitles, int index) {
+        public MyAdapter(Context context, ArrayList<String> mainTitles,  int index) {
             super(context, R.layout.row, R.id.txtMainTitle, mainTitles);
             this.mainTitles = mainTitles;
          // this.subTitles = subTitles;

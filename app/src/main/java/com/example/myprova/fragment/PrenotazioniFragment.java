@@ -57,7 +57,7 @@ public class PrenotazioniFragment extends Fragment {
 
         params.put("action", "INIT");
         params.put("username", Connection.usernameApp);
-        params.put("role", Connection.isAdmin);
+       // params.put("role", Connection.isAdmin);
         params.put("caseMobile", "mobile");
 
 
@@ -231,7 +231,7 @@ public class PrenotazioniFragment extends Fragment {
         RequestParams params = new RequestParams();
         params.put("action", "STATO");
         params.put("docente", Connection.docente);
-        params.put("usernameApp",Connection.usernameApp);
+        params.put("username",Connection.usernameApp);
         params.put("ora", Connection.hours);
         params.put("giorno", Connection.days);
         params.put("stato", stato);

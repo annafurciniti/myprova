@@ -14,11 +14,11 @@ public class PageViewModel extends ViewModel {
         public String apply(Integer input) {
             switch (input) {
                 case 1:
-                    return "SCEGLIERE UNO DEI CORSI DISPONIBILI:";
+                    return "Scegli un corso:";
                 case 2:
-                    return "NON E' STATO SELEZIONATO ALCUN CORSO!";
+                    return "Non è stato selezionato alcun corso!";
                 default:
-                    return "NON E' STATO SELEZIONATO ALCUN DOCENTE!";
+                    return "Non è stato selezionato alcun docente!";
             }
         }
     });

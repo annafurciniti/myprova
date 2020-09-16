@@ -18,9 +18,9 @@ import com.example.myprova.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{Integer.parseInt("corsi"),Integer.parseInt("docenti"), Integer.parseInt("orari")};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4};
     private final Context mContext;
-    public static PlaceholderFragment[] fragments = new PlaceholderFragment[3];
+    public static PlaceholderFragment[] fragments = new PlaceholderFragment[4];
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);

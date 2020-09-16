@@ -13,5 +13,5 @@ public class Connection {
     public static String corso = null;
     public static String docente = null;
     public static String nomeDoc = null;
-    public static String slot = null;
+    public static String ripetizioni = null;
 }

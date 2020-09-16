@@ -190,13 +190,10 @@ public class  PlaceholderFragment extends Fragment {
                         }
 
 
-
-
-
                     if(docenti.length() == 0)
-                        ((TextView)root.findViewById(R.id.section_label)).setText("NESSUN DOCENTE ASSEGNATO AL CORSO!");
+                        ((TextView)root.findViewById(R.id.section_label)).setText("Nessun docente per questo corso!");
                     else
-                        ((TextView)root.findViewById(R.id.section_label)).setText("SCEGLIERE UNO DEI DOCENTI DISPONIBILI:");
+                        ((TextView)root.findViewById(R.id.section_label)).setText("Scegli un docente disponibile:");
 
                     ListView listView = view2.findViewById(R.id.listEntita);
                     MyAdapter adp = new MyAdapter(getContext(), nome, 1);
@@ -207,13 +204,14 @@ public class  PlaceholderFragment extends Fragment {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             //FragmentTransaction ft = getFragmentManager().beginTransaction();
                             //ft.replace(R.id.fragment_container, new LoginFragment()).commit();
-                            Toast.makeText(getContext(), "onClick()", Toast.LENGTH_SHORT).show();
-                            Connection.docente = (String)((TextView)view.findViewById(R.id.txtMainTitle)).getText();
+                            Toast.makeText(getContext(), ((TextView)view.findViewById(R.id.txtMainTitle)).getText(), Toast.LENGTH_SHORT).show();
+                            Connection.docente = ((String)((TextView)view.findViewById(R.id.txtMainTitle)).getText()).split(": ")[1];
                           //  Connection.docente = ((String)((TextView)view.findViewById(R.id.txtSubTitle)).getText()).split(": ")[1];
                             ((ListView)SectionsPagerAdapter.fragments[2].getListEntita()).clearChoices();
                             Connection.days = null;
                             Connection.hours = null;
-                            SectionsPagerAdapter.fragments[2].makeListOrari(((String) ((TextView)view.findViewById(R.id.txtSubTitle)).getText()).split(": ")[1]);
+                            Connection.ripetizioni=null;
+                            SectionsPagerAdapter.fragments[2].makeListRip(((String) ((TextView)view.findViewById(R.id.txtMainTitle)).getText()).split(": ")[1]);
                             ((TabLayout) getParentFragment().getView().findViewById(R.id.tabs)).getTabAt(2).select();
                         }
                     });
@@ -231,12 +229,13 @@ public class  PlaceholderFragment extends Fragment {
         });
     }
 
-    private void makeListOrari(String idDocente){
+    private void makeListRip(String nome){
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         final View view2 = root;
-        params.put("action", "GETORARI");
-        params.put("idDocente", idDocente);
+        params.put("action", "RIP");
+        params.put("nome", nome);
+        params.put("corso",Connection.corso);
         params.put("case", "android");
         params.put("utente",Connection.username);
         final PlaceholderFragment self = this;
@@ -249,28 +248,43 @@ public class  PlaceholderFragment extends Fragment {
                 System.out.println("cia2");
                 try {
                     System.out.println("cia3");
+                  //  final ArrayList<String> stato = new ArrayList<>();
                     final ArrayList<String> giorno = new ArrayList<>();
-                    ArrayList<String> ora_i = new ArrayList<>();
-                    if(response.length() == 0)
-                        ((TextView)root.findViewById(R.id.section_label)).setText("IL DOCENTE NON HA ORARI DISPONIBILI!");
-                    else
-                        ((TextView)root.findViewById(R.id.section_label)).setText("SCEGLIERE UNO DEGLI SLOT DISPONIBILI:");
-                    for (int i = 0; i < response.length(); i++) {
-                        JSONObject e = response.getJSONObject(i);
+                     ArrayList<String> ora_i = new ArrayList<>();
+
+                   // final ArrayList<String> id_corso = new ArrayList<>();
+                   // final ArrayList<String> id_docente = new ArrayList<>();
+                   // final ArrayList<String> username = new ArrayList<>();
+
+
+                    final JSONArray ripetizioni = response.getJSONArray(0);
+                    System.out.println(response.getJSONArray(0));
+
+                    for (int i = 0; i < ripetizioni.length(); i++) {
+                        JSONObject e = ripetizioni.getJSONObject(i);
+                       // stato.add(e.getString("stato"));
                         giorno.add(Connection.days[Integer.parseInt(e.getString("giorno"))]);
-                        ora_i.add(Connection.hours[Integer.parseInt(e.getString("ora"))]);
+                        ora_i.add(Connection.hours[Integer.parseInt(e.getString("ora_i"))]);
+                      //  id_corso.add(e.getString("id_corso"));
+                      //  id_docente.add(e.getString("id_docente"));
+                       // username.add(e.getString("username"));
                     }
+                    System.out.println("rip");
+                    if(ripetizioni.length() == 0)
+                        ((TextView)root.findViewById(R.id.section_label)).setText("Il docente non ha slot disponibili!");
+                    else
+                        ((TextView)root.findViewById(R.id.section_label)).setText("Scegli giorno ed ora disponibili:");
+
                     ListView listView = view2.findViewById(R.id.listEntita);
-                    //MyAdapter adp = new MyAdapter(getContext(), giorno, ora_i, 2);
-                   // listView.setAdapter(adp);
+                    PlaceholderFragment.MyAdapter2 adp2 = new PlaceholderFragment.MyAdapter2(getContext(), giorno, ora_i,2);
+                    listView.setAdapter(adp2);
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             //FragmentTransaction ft = getFragmentManager().beginTransaction();
                             //ft.replace(R.id.fragment_container, new LoginFragment()).commit();
-                            String d;
-                            String h;
+                            String h,d;
                             switch ((String)((TextView)view.findViewById(R.id.txtMainTitle)).getText()){
                                 case "Lunedì":
                                     d = "0";
@@ -288,7 +302,7 @@ public class  PlaceholderFragment extends Fragment {
                                     d = "4";
                                     break;
                             }
-                           /* switch ((String)((TextView)view.findViewById(R.id.txtSubTitle)).getText()){
+                            switch ((String)((TextView)view.findViewById(R.id.txtSubTitle)).getText()){
                                 case "14:00/15:00":
                                     h = "0";
                                     break;
@@ -302,7 +316,8 @@ public class  PlaceholderFragment extends Fragment {
                                     h = "3";
                                     break;
                             }
-                            Connection.slot = d + h;*/
+
+                            Connection.ripetizioni=h+d;
                             Toast.makeText(getContext(), "onClick()", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -346,10 +361,41 @@ public class  PlaceholderFragment extends Fragment {
 
             //images.setImage;
             main.setText(mainTitles.get(position));
-        /*    if (this.index == 1)
+            if (this.index == 1)
+                main.setText("ID: " + mainTitles.get(position));
+            else
+                main.setText(mainTitles.get(position));
+
+            return row;
+        }
+    }
+    class MyAdapter2 extends ArrayAdapter<String> {
+        ArrayList<String> mainTitles;
+         ArrayList<String> subTitles;
+        private int index= -1;
+        public MyAdapter2(Context context, ArrayList<String> mainTitles, ArrayList<String> subTitles,  int index) {
+            super(context, R.layout.row, R.id.txtMainTitle, mainTitles);
+            this.mainTitles = mainTitles;
+             this.subTitles = subTitles;
+            this.index = index;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater layoutInflater =
+                    (LayoutInflater)getContext().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row = layoutInflater.inflate(R.layout.row, parent, false);
+            //ImageView images = row.findViewById(R.id.img);
+            TextView main = row.findViewById(R.id.txtMainTitle);
+            TextView sub = row.findViewById(R.id.txtSubTitle);
+
+
+            //images.setImage;
+            main.setText(mainTitles.get(position));
+       if (this.index == 2)
                 sub.setText("ID: " + subTitles.get(position));
             else
-                sub.setText(subTitles.get(position));*/
+                sub.setText(subTitles.get(position));
 
             return row;
         }

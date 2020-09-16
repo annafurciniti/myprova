@@ -99,13 +99,13 @@ public class PrenotaFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 System.out.println("sono prenota5");
-                if(Connection.corso != null && Connection.docente != null && Connection.hours != null && Connection.days != null){
+                if(Connection.corso != null && Connection.docente != null && Connection.ora != null && Connection.giorno != null){
                     System.out.println("sono prenota6");
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setCancelable(true);
                     builder.setTitle("Confermare la seguente ripetizione?");
                     builder.setMessage( "Corso: " + Connection.corso + "\nDocente: " + Connection.docente +
-                            "\nGiorno: " + Connection.days + "\nOra: " + Connection.hours);
+                            "\nGiorno: " + Connection.giorno + "\nOra: " + Connection.ora);
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             prenota();
@@ -132,16 +132,15 @@ public class PrenotaFragment extends Fragment {
 
 
     public void prenota(){
-        System.out.println("sono prenota7");
             AsyncHttpClient client = new AsyncHttpClient();
             RequestParams params = new RequestParams();
             params.put("action", "PRENOTA");
-            params.put("username", Connection.usernameApp);
-            params.put("id_docente", Connection.docente);
+           params.put("username", Connection.username);
+            params.put("doc", Connection.docente);
             params.put("corso", Connection.corso);
             params.put("case", "android");
-            params.put("giorno", Connection.days);
-            params.put("ora",Connection.hours) ;
+            params.put("giorno", Connection.giorno);
+            params.put("ora",Connection.ora) ;
 
             client.post(Connection.URL + "PrenotaServlet", params, new JsonHttpResponseHandler() {
                 @SuppressLint("ShowToast")

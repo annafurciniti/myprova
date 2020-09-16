@@ -56,7 +56,7 @@ public class PrenotazioniFragment extends Fragment {
         RequestParams params = new RequestParams();
 
         params.put("action", "INIT");
-        params.put("username", Connection.usernameApp);
+        params.put("username", Connection.username);
        // params.put("role", Connection.isAdmin);
         params.put("caseMobile", "mobile");
 
@@ -87,13 +87,13 @@ public class PrenotazioniFragment extends Fragment {
                     final ArrayList<String> titleListDis = new ArrayList<>();
 
 
-                    String days[]={"Lunedì","Martedì","Mercoledì","giovedì", "Venerdì"};
-                    String hours[]={"14:00","15:00","16:00","17:00"};
+                    String days[]={"","Lunedì","Martedì","Mercoledì","giovedì", "Venerdì"};
+                    String hours[]={"15:00","16:00","17:00","18:00"};
 
                   for(int i=0;i<goPrenApp.length();i++){
                         JSONObject json= goPrenApp.getJSONObject(i);
                         pAtt.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
-                        titleListAtt.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")] );
+                        titleListAtt.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[((int)json.get("ora_i"))-15] );
                     }
                    for(int i=0;i<goSvolApp.length();i++){
                         JSONObject json= goSvolApp.getJSONObject(i);
@@ -231,7 +231,7 @@ public class PrenotazioniFragment extends Fragment {
         RequestParams params = new RequestParams();
         params.put("action", "STATO");
         params.put("docente", Connection.docente);
-        params.put("username",Connection.usernameApp);
+        params.put("username",Connection.username);
         params.put("ora", Connection.hours);
         params.put("giorno", Connection.days);
         params.put("stato", stato);

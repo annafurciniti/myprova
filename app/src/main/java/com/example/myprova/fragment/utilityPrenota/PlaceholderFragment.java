@@ -138,8 +138,8 @@ public class  PlaceholderFragment extends Fragment {
                             Toast.makeText(getContext(), ((TextView)view.findViewById(R.id.txtMainTitle)).getText(), Toast.LENGTH_SHORT).show();
                             Connection.corso = (String)((TextView)view.findViewById(R.id.txtMainTitle)).getText();
                             Connection.docente = null;
-                            Connection.hours = null;
-                            Connection.days = null;
+                            Connection.ora =null;
+                            Connection.giorno=null;
                             ((ListView)SectionsPagerAdapter.fragments[2].getListEntita()).setAdapter(null);
                             SectionsPagerAdapter.fragments[1].makeListDocenti((String) ((TextView)view.findViewById(R.id.txtMainTitle)).getText());
                             ((TabLayout) getParentFragment().getView().findViewById(R.id.tabs)).getTabAt(1).select();
@@ -207,10 +207,10 @@ public class  PlaceholderFragment extends Fragment {
                             Toast.makeText(getContext(), ((TextView)view.findViewById(R.id.txtMainTitle)).getText(), Toast.LENGTH_SHORT).show();
                             Connection.docente = ((String)((TextView)view.findViewById(R.id.txtMainTitle)).getText()).split(": ")[1];
                           //  Connection.docente = ((String)((TextView)view.findViewById(R.id.txtSubTitle)).getText()).split(": ")[1];
+                            Connection.ora=null;
+                            Connection.giorno=null;
                             ((ListView)SectionsPagerAdapter.fragments[2].getListEntita()).clearChoices();
-                            Connection.days = null;
-                            Connection.hours = null;
-                            Connection.ripetizioni=null;
+
                             SectionsPagerAdapter.fragments[2].makeListRip(((String) ((TextView)view.findViewById(R.id.txtMainTitle)).getText()).split(": ")[1]);
                             ((TabLayout) getParentFragment().getView().findViewById(R.id.tabs)).getTabAt(2).select();
                         }
@@ -234,10 +234,10 @@ public class  PlaceholderFragment extends Fragment {
         RequestParams params = new RequestParams();
         final View view2 = root;
         params.put("action", "RIP");
-        params.put("nome", nome);
+        params.put("doc", nome);
         params.put("corso",Connection.corso);
         params.put("case", "android");
-        params.put("utente",Connection.username);
+        //params.put("utente",Connection.usernameApp);
         final PlaceholderFragment self = this;
         System.out.println("cia1");
         client.post(Connection.URL + "PrenotaServlet", params, new JsonHttpResponseHandler() {
@@ -248,35 +248,34 @@ public class  PlaceholderFragment extends Fragment {
                 System.out.println("cia2");
                 try {
                     System.out.println("cia3");
-                  //  final ArrayList<String> stato = new ArrayList<>();
+
                     final ArrayList<String> giorno = new ArrayList<>();
-                     ArrayList<String> ora_i = new ArrayList<>();
-
-                   // final ArrayList<String> id_corso = new ArrayList<>();
-                   // final ArrayList<String> id_docente = new ArrayList<>();
-                   // final ArrayList<String> username = new ArrayList<>();
+                      ArrayList<String> ora_i = new ArrayList<>();
 
 
-                    final JSONArray ripetizioni = response.getJSONArray(0);
+
+                    final JSONArray orario = response.getJSONArray(0);
                     System.out.println(response.getJSONArray(0));
+                    System.out.println(""+ orario +"");
 
-                    for (int i = 0; i < ripetizioni.length(); i++) {
-                        JSONObject e = ripetizioni.getJSONObject(i);
-                       // stato.add(e.getString("stato"));
-                        giorno.add(Connection.days[Integer.parseInt(e.getString("giorno"))]);
-                        ora_i.add(Connection.hours[Integer.parseInt(e.getString("ora_i"))]);
-                      //  id_corso.add(e.getString("id_corso"));
-                      //  id_docente.add(e.getString("id_docente"));
-                       // username.add(e.getString("username"));
-                    }
-                    System.out.println("rip");
-                    if(ripetizioni.length() == 0)
+
+                    if(orario.length() == 0)
                         ((TextView)root.findViewById(R.id.section_label)).setText("Il docente non ha slot disponibili!");
                     else
                         ((TextView)root.findViewById(R.id.section_label)).setText("Scegli giorno ed ora disponibili:");
+                    System.out.println("rip");
+                    for (int i = 0; i < orario.length(); i++) {
+                        JSONObject e = orario.getJSONObject(i);
+
+                        giorno.add(Integer.toString(e.getInt("giorno")));
+                        ora_i.add(Integer.toString(e.getInt("ora_i")));
+
+                    }
+                    System.out.println(giorno);
+                    System.out.println(ora_i);
 
                     ListView listView = view2.findViewById(R.id.listEntita);
-                    PlaceholderFragment.MyAdapter2 adp2 = new PlaceholderFragment.MyAdapter2(getContext(), giorno, ora_i,2);
+                   MyAdapter2 adp2 = new MyAdapter2(getContext(), giorno, ora_i,2);
                     listView.setAdapter(adp2);
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -287,37 +286,38 @@ public class  PlaceholderFragment extends Fragment {
                             String h,d;
                             switch ((String)((TextView)view.findViewById(R.id.txtMainTitle)).getText()){
                                 case "Lunedì":
-                                    d = "0";
-                                    break;
-                                case "Martedì":
                                     d = "1";
                                     break;
-                                case "Mercoledì":
+                                case "Martedì":
                                     d = "2";
                                     break;
-                                case "Giovedì":
+                                case "Mercoledì":
                                     d = "3";
                                     break;
-                                default:
+                                case "Giovedì":
                                     d = "4";
+                                    break;
+                                default:
+                                    d = "5";
                                     break;
                             }
                             switch ((String)((TextView)view.findViewById(R.id.txtSubTitle)).getText()){
-                                case "14:00/15:00":
-                                    h = "0";
-                                    break;
                                 case "15:00/16:00":
-                                    h = "1";
+                                    h = "15";
                                     break;
                                 case "16:00/17:00":
-                                    h = "2";
+                                    h = "16";
+                                    break;
+                                case "17:00/18:00":
+                                    h = "17";
                                     break;
                                 default:
-                                    h = "3";
+                                    h = "18";
                                     break;
                             }
 
-                            Connection.ripetizioni=h+d;
+                            Connection.ora = h;
+                            Connection.giorno = d;
                             Toast.makeText(getContext(), "onClick()", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -375,10 +375,61 @@ public class  PlaceholderFragment extends Fragment {
         private int index= -1;
         public MyAdapter2(Context context, ArrayList<String> mainTitles, ArrayList<String> subTitles,  int index) {
             super(context, R.layout.row, R.id.txtMainTitle, mainTitles);
+            System.out.println(mainTitles);
+            mainTitles=riccardo(mainTitles);
+            System.out.println(mainTitles);
             this.mainTitles = mainTitles;
+            System.out.println(subTitles);
+            subTitles=teprego(subTitles);
+            System.out.println(subTitles);
              this.subTitles = subTitles;
             this.index = index;
         }
+        public ArrayList<String> riccardo(ArrayList<String> giorni) {
+            for (int i = 0; i < giorni.size(); i++) {
+                switch (giorni.get(i)) {
+                    case "1":
+                        giorni.set(i, "Lunedì");
+                        break;
+                    case "2":
+                        giorni.set(i, "Martedì");
+                        break;
+                    case "3":
+                        giorni.set(i, "Mercoledì");
+                        break;
+                    case "4":
+                        giorni.set(i, "Giovedì");
+                        break;
+                    default:
+                        giorni.set(i, "Venerdì");
+                        break;
+                }
+            }
+            return giorni;
+        }
+
+
+        public ArrayList<String> teprego(ArrayList<String> ore) {
+            for (int i = 0; i < ore.size(); i++) {
+                switch (ore.get(i)) {
+                    case "15":
+                        ore.set(i, "15:00/16:00");
+                        break;
+                    case "16":
+                        ore.set(i, "16:00/17:00");
+                        break;
+                    case "17":
+                        ore.set(i, "17:00/18:00");
+                        break;
+                    default:
+                        ore.set(i, "18:00/19:00");
+                        break;
+                }
+            }
+            return ore;
+
+        }
+
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {

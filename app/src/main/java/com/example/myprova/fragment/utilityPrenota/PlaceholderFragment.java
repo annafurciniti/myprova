@@ -343,7 +343,7 @@ public class  PlaceholderFragment extends Fragment {
        // ArrayList<String> subTitles;
         private int index= -1;
         public MyAdapter(Context context, ArrayList<String> mainTitles,  int index) {
-            super(context, R.layout.row, R.id.txtMainTitle, mainTitles);
+            super(context, R.layout.rowprenota, R.id.txtMainTitle, mainTitles);
             this.mainTitles = mainTitles;
          // this.subTitles = subTitles;
             this.index = index;
@@ -353,7 +353,7 @@ public class  PlaceholderFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater =
                     (LayoutInflater)getContext().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.row, parent, false);
+            View row = layoutInflater.inflate(R.layout.rowprenota, parent, false);
             //ImageView images = row.findViewById(R.id.img);
             TextView main = row.findViewById(R.id.txtMainTitle);
            // TextView sub = row.findViewById(R.id.txtSubTitle);
@@ -374,7 +374,7 @@ public class  PlaceholderFragment extends Fragment {
          ArrayList<String> subTitles;
         private int index= -1;
         public MyAdapter2(Context context, ArrayList<String> mainTitles, ArrayList<String> subTitles,  int index) {
-            super(context, R.layout.row, R.id.txtMainTitle, mainTitles);
+            super(context, R.layout.roworari, R.id.txtMainTitle, mainTitles);
             System.out.println(mainTitles);
             mainTitles=riccardo(mainTitles);
             System.out.println(mainTitles);
@@ -435,7 +435,7 @@ public class  PlaceholderFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater layoutInflater =
                     (LayoutInflater)getContext().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.row, parent, false);
+            View row = layoutInflater.inflate(R.layout.roworari, parent, false);
             //ImageView images = row.findViewById(R.id.img);
             TextView main = row.findViewById(R.id.txtMainTitle);
             TextView sub = row.findViewById(R.id.txtSubTitle);
@@ -444,7 +444,7 @@ public class  PlaceholderFragment extends Fragment {
             //images.setImage;
             main.setText(mainTitles.get(position));
        if (this.index == 2)
-                sub.setText("ID: " + subTitles.get(position));
+                sub.setText("Docente: " + subTitles.get(position));
             else
                 sub.setText(subTitles.get(position));
 

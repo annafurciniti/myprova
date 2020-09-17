@@ -2,22 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="wrap_content"
+    android:gravity="left"
+    android:background="@drawable/bg1"
     android:padding="20dp">
     <ImageView
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:src="@drawable/graduate"/>
+        android:src="@drawable/graduate"
+        android:color="@color/white"/>
+
     <TextView
         android:id="@+id/txt_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="@color/white"/>
     <TextView
         android:id="@+id/txt_ruolo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="@color/white"/>
 </LinearLayout>

@@ -106,7 +106,7 @@ public class PrenotaFragment extends Fragment {
                     builder.setTitle("Confermare la seguente ripetizione?");
                     builder.setMessage( "Corso: " + Connection.corso + "\nDocente: " + Connection.docente +
                             "\nGiorno: " + Connection.giorno + "\nOra: " + Connection.ora);
-                    builder.setPositiveButton("CONFERMA", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             prenota();
                             dialog.dismiss();

@@ -1,9 +1,9 @@
 package com.example.myprova.fragment;
 
 public class Connection {
-    //public static String URL = "http://192.168.1.11:8080/TWEBIUM/";
-    public static String URL = "http://192.168.1.9:8080/TWEBIUM/";
-   // public static String URL = "http://127.0.0.1:8080/TWEBIUM/";
+    public static String URL = "http://192.168.1.11:8080/TWEBIUM/";
+    //public static String URL = "http://192.168.1.9:8080/TWEBIUM/";cre
+
 
 
     public static String[] hours = {"15:00/16:00", "16:00/17:00", "17:00/18:00", "18:00/19:00"};

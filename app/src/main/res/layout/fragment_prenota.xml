@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary" />
 
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -33,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:src="@android:drawable/ic_menu_save" />
+            android:src="@drawable/ic_prenota" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

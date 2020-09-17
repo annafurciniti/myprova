@@ -186,7 +186,7 @@ public class PrenotazioniFragment extends Fragment {
                             listaCorrente.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adattatore, final View componente, int pos, long id){
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
                                     builder.setCancelable(true);
                                     builder.setTitle(prenSel.get(pos).getId_corso());
                                     builder.setMessage("Docente: " + prenSel.get(pos).getId_docente());

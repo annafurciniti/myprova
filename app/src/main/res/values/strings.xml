@@ -5,7 +5,7 @@
     <string name="close" />
     <string name="tab_text_1">corsi</string>
     <string name="tab_text_2">docenti</string>
-    <string name="tab_text_3">giorno</string>
+    <string name="tab_text_3">orario</string>
     <string name="tab_text_4">ora_i</string>
 
 </resources>

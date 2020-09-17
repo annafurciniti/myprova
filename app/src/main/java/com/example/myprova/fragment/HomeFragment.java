@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment {
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
                             builder.setCancelable(true);
                      /*       builder.setTitle(titolo.get(position));
                             builder.setTitle(descrizione.get(position));
@@ -103,7 +103,6 @@ public class HomeFragment extends Fragment {
                                     }
                                 });
                             }
-
                             builder.show();
                         }
                     });

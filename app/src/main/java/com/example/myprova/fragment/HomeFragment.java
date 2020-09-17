@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.myprova.R;
+import com.example.myprova.fragment.utilityPrenota.PlaceholderFragment;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -89,9 +90,9 @@ public class HomeFragment extends Fragment {
 
                             });*/
                             if(Connection.username != null){
-                                builder.setPositiveButton("Vedi corso", new DialogInterface.OnClickListener() {
+                                builder.setPositiveButton("Prenota", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, new PrenotazioniFragment()).commit();
+                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, new PrenotaFragment()).commit();
                                         dialog.dismiss();
                                     }
                                 });

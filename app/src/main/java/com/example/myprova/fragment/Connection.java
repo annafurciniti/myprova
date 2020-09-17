@@ -5,10 +5,10 @@ public class Connection {
    // public static String URL = "http://127.0.0.1:8080/TWEBIUM/";
 
 
-    public static String[] hours = {"14:00/15:00", "15:00/16:00", "16:00/17:00", "17:00/18:00"};
+    public static String[] hours = {"15:00/16:00", "16:00/17:00", "17:00/18:00", "18:00/19:00"};
     public static String[] days = {"Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì"};
     public static String username = null;
-    public static int isAdmin = -1;
+    public static int ruolo = -1;
     public static String corso = null;
     public static String docente = null;
     public static String ora = null;

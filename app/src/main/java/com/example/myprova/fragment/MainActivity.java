@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 
 
-import static com.example.myprova.fragment.Connection.isAdmin;
+import static com.example.myprova.fragment.Connection.ruolo;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ((TextView)findViewById(R.id.txt_ruolo)).setText("");
 
                 Connection.username = null;
-                Connection.isAdmin = -1;
+                Connection.ruolo = -1;
 
                 this.logged = false;
                 this.invalidateOptionsMenu();
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             params.put("action", "login");
             params.put("username", username);
             params.put("password", password);
-            params.put("role",isAdmin);
+           //params.put("role",isAdmin);
 
             client.post(Connection.URL + "LoginServlet", params, new JsonHttpResponseHandler() {
                 @SuppressLint("ShowToast")
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Log.d("ret" + i, rets.get(i));
                         }
 
-                        if (!rets.get(0).equals("error")) {
+                        if (!rets.get(0).equals("errore")) {
                             TextView txtUsername = (TextView) findViewById(R.id.txt_username);
                             TextView txtRuolo =(TextView) findViewById(R.id.txt_ruolo);
                             txtUsername.setText(rets.get(0));
@@ -170,12 +170,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             System.out.println(rets.get(0));
                             //0 studente, 1 admin
                             if(rets.get(1).equals("0")) {
-                                Connection.isAdmin = 0;
-                                txtRuolo.setText("Studente");
+                                System.out.println(rets.get(1));
+                                Connection.ruolo = 0;
+                                txtRuolo.setText("User");
 
                             }else {
-                                Connection.isAdmin = 1;
-                                txtRuolo.setText("Amministratore");
+                                Connection.ruolo = 1;
+                                txtRuolo.setText("Admin");
 
                             }
 
@@ -222,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             params.put("action", "sing");
             params.put("username", username);
             params.put("password", password);
-            params.put("role",isAdmin);
+            params.put("role",ruolo);
 
             client.post(Connection.URL + "LoginServlet", params, new JsonHttpResponseHandler() {
                 @SuppressLint({"ShowToast", "SetTextI18n"})
@@ -237,19 +238,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Log.d("ret" + i, rets.get(i));
                         }
 
-                        if(rets.get(0).equals("esistente")){
+                        if(rets.get(0).equals("esiste")){
                             viewControl.setText("Username già esistente");
-                        }else if (rets.get(0).equals("error")){
-                            viewControl.setText("Username o password errati");
+                      /*  }else if (rets.get(0).equals("error")){
+                            viewControl.setText("Username o password errati");*/
                         }else{
                             TextView txtUsername = findViewById(R.id.txt_username);
                             TextView txtRuolo = findViewById(R.id.txt_ruolo);
                             txtUsername.setText(rets.get(0));
                             //0 studente, 1 admin
-                            /*    if(rets.get(1).equals("0")) {
+                     /*          if(rets.get(1).equals("0")) {
                                     txtRuolo.setText("User");
                                 }else {
-                                    txtRuolo.setText("Admin");
+                                    txtRuolo.setText("Amministratore");
                                 }*/
 
                             //modifico la nav laterale

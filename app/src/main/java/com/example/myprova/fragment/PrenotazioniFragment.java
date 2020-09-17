@@ -98,12 +98,12 @@ public class PrenotazioniFragment extends Fragment {
                    for(int i=0;i<goSvolApp.length();i++){
                         JSONObject json= goSvolApp.getJSONObject(i);
                        pSvol.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
-                        titleListEff.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")] );
+                        titleListEff.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[((int)json.get("ora_i"))-15] );
                     }
                     for(int i=0;i<goDisdApp.length();i++){
                         JSONObject json= goDisdApp.getJSONObject(i);
                        pDisd.add(new Ripetizioni((json.get("stato").toString()),(int)json.get("giorno"),(int)json.get("ora_i"),json.get("id_corso").toString(),json.get("id_docente").toString(),json.get("username").toString()));
-                        titleListDis.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[(int)json.get("ora_i")]  );
+                        titleListDis.add(json.get("id_corso").toString() + ", " + days[(int)json.get("giorno")] +" alle ore " + hours[((int)json.get("ora_i"))-15]  );
                     }
 
 
@@ -194,7 +194,7 @@ public class PrenotazioniFragment extends Fragment {
                                        stato1 = prenSel.get(pos).getStato();
                                         builder.setPositiveButton("Effettua", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                cambiaStato("effettuata", stato1);
+                                                cambiaStato("svolto", stato1);
                                                 dialog.dismiss();
                                             }
                                         });
@@ -232,12 +232,12 @@ public class PrenotazioniFragment extends Fragment {
         params.put("action", "STATO");
         params.put("docente", Connection.docente);
         params.put("username",Connection.username);
-        params.put("ora", Connection.hours);
-        params.put("giorno", Connection.days);
+        params.put("ora", Connection.ora);
+        params.put("giorno", Connection.giorno);
         params.put("stato", stato);
       //  params.put("id", idPrenotazione);
         params.put("caseMobile", "mobile");
-        //Log.d("IDPREN :" ,Integer.toString(idPren));
+        Log.d("Stato :" ,stato1);
 
         client.post(Connection.URL + "PrenotazioniServlet", params, new JsonHttpResponseHandler() {
             @SuppressLint("ShowToast")

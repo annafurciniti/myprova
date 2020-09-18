@@ -190,17 +190,19 @@ public class PrenotazioniFragment extends Fragment {
                                     builder.setCancelable(true);
                                     builder.setTitle(prenSel.get(pos).getId_corso());
                                     builder.setMessage("Docente: " + prenSel.get(pos).getId_docente());
+                                    final int giorno = prenSel.get(pos).getGiorno();
+                                    final int ora = prenSel.get(pos).getOra_i();
+                                    final String docente = prenSel.get(pos).getId_docente();
                                     if(option){
-                                       stato1 = prenSel.get(pos).getStato();
                                         builder.setPositiveButton("Effettua", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                cambiaStato("svolto", stato1);
+                                                cambiaStato("svolto", docente, giorno, ora);
                                                 dialog.dismiss();
                                             }
                                         });
                                         builder.setNegativeButton("Disdici", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                cambiaStato("disdetta", stato1);
+                                                cambiaStato("disdetta", docente, giorno, ora);
                                                 dialog.dismiss();
                                             }
 
@@ -226,25 +228,38 @@ public class PrenotazioniFragment extends Fragment {
             }
         });
     }
-    public void cambiaStato(final String stato, String stato1){
+
+    public void cambiaStato(final String stato, String docente, int giorno, int ora){
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("action", "STATO");
-        params.put("docente", Connection.docente);
-        params.put("username",Connection.username);
-        params.put("ora", Connection.ora);
-        params.put("giorno", Connection.giorno);
-        params.put("stato", stato);
-      //  params.put("id", idPrenotazione);
         params.put("caseMobile", "mobile");
-        Log.d("Stato :" ,stato1);
+        params.put("username",Connection.username);
+
+        params.put("docente", docente);
+        params.put("ora", ora);
+        params.put("giorno", giorno);
+        params.put("stato", stato);
 
         client.post(Connection.URL + "PrenotazioniServlet", params, new JsonHttpResponseHandler() {
             @SuppressLint("ShowToast")
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                super.onSuccess(statusCode, headers, response);Toast.makeText(getContext().getApplicationContext(), "Prenotazione " + stato + "!", Toast.LENGTH_SHORT).show();
-                fresh();
+                super.onSuccess(statusCode, headers, response);
+                try {
+                    String res = response.getString(0);
+                    System.out.println(res);
+                    if(res.equals("true")){
+                        fresh();
+                        Toast.makeText(getContext().getApplicationContext(), "Prenotazione " + stato + "!", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(getContext(), "Errore durante la modifica della prenotazione!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

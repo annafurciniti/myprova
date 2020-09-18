@@ -132,43 +132,43 @@ public class PrenotaFragment extends Fragment {
 
 
     public void prenota(){
-            AsyncHttpClient client = new AsyncHttpClient();
-            RequestParams params = new RequestParams();
-            params.put("action", "PRENOTA");
-           params.put("username", Connection.username);
-            params.put("doc", Connection.docente);
-            params.put("corso", Connection.corso);
-            params.put("case", "android");
-            params.put("giorno", Connection.giorno);
-            params.put("ora",Connection.ora) ;
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("action", "PRENOTA");
+        params.put("case", "android");
+        params.put("username", Connection.username);
+        params.put("doc", Connection.docente);
+        params.put("corso", Connection.corso);
+        params.put("giorno", Connection.giorno);
+        params.put("ora",Connection.ora);
 
-            client.post(Connection.URL + "PrenotaServlet", params, new JsonHttpResponseHandler() {
-                @SuppressLint("ShowToast")
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    super.onSuccess(statusCode, headers, response);
-
-                    try {
-                        boolean res = true;
-                        res = response.getBoolean(0);
-                        System.out.println(res);
-                        if(res){
-                            Toast.makeText(getContext(), "Prenotazione registrata con successo!", Toast.LENGTH_SHORT).show();
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PrenotazioniFragment()).commit();
-                            ((NavigationView)getActivity().findViewById(R.id.nav_view)).setCheckedItem(R.id.nav_prenotazioni);
-                        }else{
-                            Toast.makeText(getContext(), "Errore durante la registrazione della prenotazione!", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+        client.post(Connection.URL + "PrenotaServlet", params, new JsonHttpResponseHandler() {
+            @SuppressLint("ShowToast")
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                try {
+                    String res = response.getString(0);
+                    System.out.println(res);
+                    if(res.equals("true")){
+                        Toast.makeText(getContext(), "Prenotazione registrata con successo!", Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PrenotazioniFragment()).commit();
+                        ((NavigationView)getActivity().findViewById(R.id.nav_view)).setCheckedItem(R.id.nav_prenotazioni);
+                    }else if(res.equals("errore")){
+                        Toast.makeText(getContext(), "Errore durante la registrazione della prenotazione!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "Errore, studente già occupato a quest'ora e giorno!", Toast.LENGTH_SHORT).show();
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+            }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                    super.onFailure(statusCode, headers, throwable, errorResponse);
-                    Log.d("failure",""+ statusCode+""+ errorResponse);
-                }
-            });
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.d("failure",""+ statusCode+""+ errorResponse);
+            }
+        });
     }
 }

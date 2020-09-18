@@ -170,5 +170,9 @@ public class PrenotaFragment extends Fragment {
                 Log.d("failure",""+ statusCode+""+ errorResponse);
             }
         });
+        Connection.ora= null;
+        Connection.giorno= null;
+        Connection.docente= null;
+        Connection.corso= null;
     }
 }
